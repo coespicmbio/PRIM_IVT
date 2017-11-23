@@ -1,6 +1,6 @@
-
-
-# Ajeitar o nome do arquivo 
+###################################
+#### Ajustar o nome do arquivo ####
+###################################
 
 flora <- list.files("D:/PRIM_estrada/_analise_priorizacao/cerrado/alvos_conservacao/especies_flora", pattern = "\\.tif$",all.files = T, full.names = T)
 

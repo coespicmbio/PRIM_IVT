@@ -1,21 +1,23 @@
+##############################################
+#### Gerar raster de espÃ©cies sem modelos ####
+##############################################
 
-#### Gerar raster de espécies sem modelos ####
 
 library(rgeos)
 library (raster)
 setwd("D:/PRIM_estrada/especies_modelos")
 
-# Carrega a tabela com todos os pontos das espécies sem modelos (Mayra)
+# Carrega a tabela com todos os pontos das espÃ©cies sem modelos (Mayra)
 sps_smod_ptos <- read.table("./sps_PRIM_estrada_ptos_sem_mod.txt", sep= "\t", header = T)
 
-# Separa as espécies sem modelo
+# Separa as espÃ©cies sem modelo
 # sps_prim <- read.table("./sps_PRIM_estrada.txt", sep= "\t", header = T)
 # sps_prim_smod <- subset(sps_prim,modelagem==0)
-# Separa os pontos das espécies sem modelos.
+# Separa os pontos das espÃ©cies sem modelos.
 # sps_prim_smod_merge <- merge(sps_ptos, sps_prim_smod, by.x="Taxon", by.y="TAXON" , all.x=T)
 # sps_sem_mod <- subset(sps_prim_smod_merge,sps_prim_smod_merge$modelagem.x==0)
 
-# Lista das espécies
+# Lista das espÃ©cies
 sps <- as.vector(unique(sps_smod_ptos$Taxon))
 
 # Carrega o raster 
@@ -59,18 +61,18 @@ if (length(pixel)!=0){writeRaster(r_up_sp, paste0("./sem_mod/_poucos_pontos/",gs
 # system('shutdown -h')
 
 
-#### Confere espécies que estão sem raster ####
+#### Confere espÃ©cies que estÃ£o sem raster ####
 
-# Lista de espécies com modelos
+# Lista de espÃ©cies com modelos
 sp_mod <- list.files("./bin/_1km", pattern = "\\.tif$")
 
-# Lista de espécies sem mod (tiago)
+# Lista de espÃ©cies sem mod (tiago)
 sp_smod1 <- list.files("./bin/_sem_mod", pattern = "\\.tif$")
 
-# Lista de espécies sem mod (Mayra)
+# Lista de espÃ©cies sem mod (Mayra)
 sp_smod2 <- list.files("./sem_mod/_poucos_pontos", pattern = "\\.tif$")
 
-# Espécies com raster
+# EspÃ©cies com raster
 sp_raster <- c(sp_mod,sp_smod1,sp_smod2)
 sp_raster <- gsub(pattern = "\\.tif$", replacement = "", sp_raster)
 sp_raster <- gsub(pattern = "_", replacement = " ", sp_raster)
@@ -79,16 +81,16 @@ sp_raster <- as.data.frame(sp_raster)
 names(sp_raster) <- "TAXON"
 sp_raster$raster <- 1
 
-# Tabela todas as espécies
+# Tabela todas as espÃ©cies
 tab_sps <- read.table("./sps_PRIM_estrada.txt", sep="\t",header = T)
 
 # Merge
 tab_sraster <- merge(tab_sps,sp_raster, by.x="TAXON", by.y = "TAXON", all.x=T)
 tab_sraster <- subset(tab_sraster, is.na(tab_sraster$raster))
 
-#### Gera os raster das espécies que não tem modelos, nem pontos, mas tem polígonos
+#### Gera os raster das espÃ©cies que nÃ£o tem modelos, nem pontos, mas tem polÃ­gonos
 
-# Carrega o shape das espécies que só tem polígonos
+# Carrega o shape das espÃ©cies que sÃ³ tem polÃ­gonos
 sp_pol <- shapefile("./poligonos/2_select/sp_pol.shp")
 
 # Carrega o raster 
@@ -101,11 +103,11 @@ sp= sps[1]
 
 for (sp in sps){
   
-  # Carrega o shp da espécie
+  # Carrega o shp da espÃ©cie
   sp_shp <- subset(sp_pol,sp_pol$taxon==sp)
   sp_shp@proj4string <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
   
-  # Identifica o valor do pixel que tem interseção com o polígono
+  # Identifica o valor do pixel que tem interseÃ§Ã£o com o polÃ­gono
   pixel <- unique(extract(ups_BR,sp_shp))
   pixel <- unique(unlist(pixel, recursive = F, use.names = F))
   length(pixel)

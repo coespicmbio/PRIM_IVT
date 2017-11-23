@@ -1,3 +1,7 @@
+##########################################################################
+#### C√°lculo da propor√ß√£o da distribui√ß√£o das esp√©cies em UC e biomas ####
+##########################################################################
+
 library(rgeos)
 library (raster)
 setwd("D:/PRIM_estrada/especies_modelos")
@@ -9,7 +13,7 @@ setwd("D:/PRIM_estrada/especies_modelos")
 # Carregar um raster modelo
 rmod <- raster("./limites/_LIMITES_0.tif")
 plot(rmod)
-# Extrai a posiÁ„o dos pixel cÈlulas que tem interseÁ„o com o shape
+# Extrai a posi√ß√£o dos pixel c√©lulas que tem interse√ß√£o com o shape
 #n_cel <- cellFromPolygon(rmod, ucs, weights=T)
 #n_cel <- as.data.frame(n_cel)
 #n_cel <- n_cel$cell
@@ -49,7 +53,7 @@ for (b in itens) {
 }
 
 
-#### C·lculo da proporÁ„o em UC e biomas ####
+#### C√°lculo da propor√ß√£o em UC e biomas ####
 
 # Tabela vazia para receber valores
 #tab_prop <- data.frame("taxon"=character(0),"prop_UC"=numeric(0),
@@ -60,7 +64,7 @@ tab_props <- data.frame("prop_UC"=numeric(0),"prop_pt"= numeric(0), "prop_pp"=nu
 # Cria os vetores 
 taxon <- character()
 
-# Carrega os rasters bin·rios das espÈcies da fauna
+# Carrega os rasters bin√°rios das esp√©cies da fauna
 spsF <- list.files("./bin/_1km_todas", pattern = "\\.tif$", full.names = T)
 #sp = spsF[1]
 #plot(raster(sp))
@@ -76,25 +80,25 @@ for (sp in spsF){
   # Cria vetor vazio
   props <- numeric()
   
-  # Adiciona o nome da espÈcie ao vetor
+  # Adiciona o nome da esp√©cie ao vetor
   taxon <- append(x= taxon, values =gsub(pattern="\\.tif$",replacement="",basename(sp)))
   
-  # Linha a ser adicionada ‡ tabela vazia
+  # Linha a ser adicionada √† tabela vazia
   #linha <- data.frame("taxon"= gsub(pattern="\\.tif$",replacement="",basename(sp)),
                   #    "prop_UC"=0,"prop_pt"= 0, "prop_pp"=0, "prop_ma"=0,"prop_ce"=0,"prop_ca"=0,"prop_am"=0)
   
   #linha <- data.frame("taxon"=character(0))
   #linha$taxon <- gsub(pattern="\\.tif$",replacement="",basename(sp))
   
-  # Carrega o raster da espÈcie
+  # Carrega o raster da esp√©cie
   spR <- raster(sp)
   
   cat("raster carregado", "\n")
   
-  # Calcula o total de cÈlulas que a espÈcie ocupa
+  # Calcula o total de c√©lulas que a esp√©cie ocupa
   sp_ncel <- cellStats(spR, stat='sum', na.rm=TRUE)
   
-  # Calcula a proporÁ„o das cÈlulas da espÈcie que ocorre em UC
+  # Calcula a propor√ß√£o das c√©lulas da esp√©cie que ocorre em UC
   spXuc <- spR * ucs
   spXuc_ncel <- cellStats(spXuc, stat='sum', na.rm=TRUE)
   spXuc_prop <- round(spXuc_ncel/sp_ncel,2)
@@ -102,11 +106,11 @@ for (sp in spsF){
   
   cat("prop em UC calculada", "\n")
   
-  # ProporÁ„o de UC na Linha
+  # Propor√ß√£o de UC na Linha
   #linha <- data.frame("taxon"= gsub(pattern="\\.tif$",replacement="",basename(sp)),"prop_UC"=spXuc_prop,
                    #   "prop_pt"= 0, "prop_pp"=0, "prop_ma"=0,"prop_ce"=0,"prop_ca"=0,"prop_am"=0)
   
-  # Calcula a proporÁ„o das cÈlulas da espÈcie que ocorre em biomas
+  # Calcula a propor√ß√£o das c√©lulas da esp√©cie que ocorre em biomas
   # Lista de rasters dos biomas
   rbF <- list.files("./limites/biomas", pattern = "\\.tif$", full.names = T)
   n_biomas <- length(rbF)
@@ -115,7 +119,7 @@ for (sp in spsF){
     # Carrega o raster do bioma
     rb <- raster(rbF[n_biomas])
     
-    # Calcula a proporÁ„o
+    # Calcula a propor√ß√£o
     spXbioma <- spR * rb
     spXbioma_ncel <- cellStats(spXbioma, stat='sum', na.rm=TRUE)
     prop_bioma <- spXbioma_ncel/sp_ncel
@@ -126,7 +130,7 @@ for (sp in spsF){
     cat(paste0("prop do ", names(rb)," calculada"), "\n")
     
     
-    # Prepara para o prÛximo bioma
+    # Prepara para o pr√≥ximo bioma
     n_biomas <- n_biomas-1
     
     # Progresso

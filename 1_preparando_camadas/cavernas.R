@@ -1,3 +1,7 @@
+####################################
+#### Gerando raster de cavernas ####
+####################################
+
 library (raster)
 library(maptools)
 setwd("D:/PRIM_estrada/cavernas")
@@ -44,7 +48,7 @@ for (r in lista_rochas){
   rochas <- readShapePoly(fn= r,proj4string=CRS("+proj=longlat +datum=WGS84"))
   cat ( basename(r), "\n")
 
-  # Identifica a posição das celulas
+  # Identifica a posiÃ§Ã£o das celulas
   cat ( "posicao", "\n")
   n_cel <- cellFromPolygon(r_0, rochas, weights=T)
   n_cel <- as.data.frame(n_cel)

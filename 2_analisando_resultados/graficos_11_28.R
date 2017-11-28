@@ -1,10 +1,10 @@
-### An·lise de resultados PRIM Estrada valor biologico do zonation raster rank ###
+### An√°lise de resultados PRIM Estrada valor biologico do zonation raster rank ###
 ###Dividindo o raster em quatro classes de sensibilidade###
 
 library(raster)
 setwd("D:/PRIM_estrada/_resultado/caatinga")
 
-# Antes de carregar o raster, fazer um cÛpia dele no ArcGIS para 64bits.
+# Antes de carregar o raster, fazer um c√≥pia dele no ArcGIS para 64bits.
 # Carregar o raster rank resultado do Zonation
 rank <- raster("rank/prim_estrada_caatinga.tif")
 
@@ -30,10 +30,10 @@ plot(c1+c2+c3+c4)
 up <- raster("./up/up_caatinga.tif")
 plot(up)
 
-# Total de cÈlulas do valores diferentes de NA
+# Total de c√©lulas do valores diferentes de NA
 ncell_bioma <- length(na.exclude(getValues(rc)))
 
-# ProporÁ„o de cada classe ocupando o bioma (o numero 2 no final da sentenÁa e relativo ‡s casas decimais)###
+# Propor√ß√£o de cada classe ocupando o bioma (o numero 2 no final da senten√ßa e relativo √†s casas decimais)###
 c1_prop <- round(cellStats(c1, stat='sum', na.rm=TRUE)/ncell_bioma,2)
 c2_prop <- round(cellStats(c2, stat='sum', na.rm=TRUE)/ncell_bioma,2)
 c3_prop <- round(cellStats(c3, stat='sum', na.rm=TRUE)/ncell_bioma,2)
@@ -45,7 +45,7 @@ spp <- read.table("features_list.txt",header = F,sep=" ")
 ##escolhe a coluna que interessa da planilha#
 spp <- spp[,6]
 spp <- as.vector(spp)
-#muda os nomes dos elementos da primeira coluna (era o endereÁo da pasta e eu quero so o nome do alvo)
+#muda os nomes dos elementos da primeira coluna (era o endere√ßo da pasta e eu quero so o nome do alvo)
 spp <- gsub(spp,pattern = ".*alvos_conservacao/", replacement = "")
 
 
@@ -55,7 +55,7 @@ tab_cl <- data.frame("alvo"=character(0),"classe"=numeric(0))
 tab_prop <- data.frame("alvo"=character(0),"classe_1"=numeric(0),"classe_2"=numeric(0),"classe_3"=numeric(0),"classe_4"=numeric(0))
 
 
-#para construir o looping, preciso extrair o raster de cada alvo e para isso busco a lista na tabela com o endereÁo dos alvos. a partir daÌ os comandos pedem para eliminar tudo que 
+#para construir o looping, preciso extrair o raster de cada alvo e para isso busco a lista na tabela com o endere√ßo dos alvos. a partir da√≠ os comandos pedem para eliminar tudo que 
 ##nao seja o nome da sp##
 #a <- spp[1]
 
@@ -71,7 +71,7 @@ for (a in spp){
   # Carrega o raster do alvo
   ra <- raster(a)
   
-  # Transforma as celulas do raster que antes apresentavam valores continuos para bin·rio
+  # Transforma as celulas do raster que antes apresentavam valores continuos para bin√°rio
   ra_b <- ra>0
   
   # Numero de celulas emc ada classe
@@ -91,7 +91,7 @@ for (a in spp){
   tab_prop_a <- data.frame("alvo"=nome,"classe_1"=prop_c1,"classe_2"=prop_c2,"classe_3"=prop_c3,"classe_4"=prop_c4)
   
   
-  # Classes e UPs em que o alvo tem ocorrÍncia
+  # Classes e UPs em que o alvo tem ocorr√™ncia
   if (maxValue(ra_b)!=0){
     ra_b_pto <- rasterToPoints(ra_b,spatial = T,fun=function(x){x==1})
     a_cl <- sort(as.vector(na.exclude(unique(extract(rc,ra_b_pto,fun=max)))))
@@ -109,7 +109,7 @@ for (a in spp){
 }
 
 
-# Carrega a tabela com as categorias de ameaÁas
+# Carrega a tabela com as categorias de amea√ßas
 cat <- read.table("especies_categoria.txt",sep="\t",header = T)
 
 # merge
@@ -123,7 +123,7 @@ write.table(tab_up,"tabela_ups.txt",sep="\t",quote = F,row.names = F)
 write.table(tab_prop,"tabela_proporcao_distribuicao.txt",sep="\t",quote = F,row.names = F)
 
 
-###### ATEN«√O ##################################################################################################################
+###### ATEN√á√ÉO ##################################################################################################################
 # Abrir a planilha "tabela_proporcao_distribuicao.txt" no excel e completar a coluna "grupos" com "fitofisionomias" e "cavernas"
 #################################################################################################################################
 
@@ -190,13 +190,13 @@ names(tab) <- c("grupo","classe","categoria","media","sd")
 tab_med_sd <- rbind(tab_med_sd,tab)
 
 # Substituindo os valores das classes que variam de 1 a 4, pelas categorias###
-tab_med_sd$classe<-gsub(tab_med_sd$classe,pattern = "1",replacement = "¡reas Menos Preocupantes")
-tab_med_sd$classe<-gsub(tab_med_sd$classe,pattern = "2",replacement = "¡reas SensÌveis")
-tab_med_sd$classe<-gsub(tab_med_sd$classe,pattern = "3",replacement = "¡reas Muito SensÌveis")
-tab_med_sd$classe<-gsub(tab_med_sd$classe,pattern = "4",replacement = "¡reas Extremamente SensÌveis")
+tab_med_sd$classe<-gsub(tab_med_sd$classe,pattern = "1",replacement = "√Åreas Menos Preocupantes")
+tab_med_sd$classe<-gsub(tab_med_sd$classe,pattern = "2",replacement = "√Åreas Sens√≠veis")
+tab_med_sd$classe<-gsub(tab_med_sd$classe,pattern = "3",replacement = "√Åreas Muito Sens√≠veis")
+tab_med_sd$classe<-gsub(tab_med_sd$classe,pattern = "4",replacement = "√Åreas Extremamente Sens√≠veis")
 
-# Colocando a ordem em que as classes aparecer„o no gr·fico, do mais sensÌvel para o menos preocupante###
-tab_med_sd$classe = factor(tab_med_sd$classe, levels=c("¡reas Extremamente SensÌveis",'¡reas Muito SensÌveis','¡reas SensÌveis','¡reas Menos Preocupantes'))
+# Colocando a ordem em que as classes aparecer√£o no gr√°fico, do mais sens√≠vel para o menos preocupante###
+tab_med_sd$classe = factor(tab_med_sd$classe, levels=c("√Åreas Extremamente Sens√≠veis",'√Åreas Muito Sens√≠veis','√Åreas Sens√≠veis','√Åreas Menos Preocupantes'))
 tab_med_sd$categoria = factor(tab_med_sd$categoria, levels=c("CR",'EN','VU',"NT","LC"))
 
 # Salva a tabela
@@ -204,10 +204,10 @@ write.table(tab_med_sd,"tabela_proporcao_distribuicao_MEAN.txt",sep="/t",quote =
 #####
 
 
-#### GR¡FICOS ####
+#### GR√ÅFICOS ####
 library(ggplot2)
 #library(gridExtra)
-###### ATEN«√O ##################################################################################################################
+###### ATEN√á√ÉO ##################################################################################################################
 ### A partir de agora va para o excel e verticalize a planilha tabela_proporcao_distribuicao_MEAN.txt. Ao inves das classes
 ### estarem dispostas em quatro colunas diferentes, elas devem estar numa unica coluna chamada "classe"
 #################################################################################################################################
@@ -219,18 +219,18 @@ library(ggplot2)
 # Selecionando apenas linhas de fauna e flora
 fauflor <- tab_med_sd[tab_med_sd$grupo =="fauna" | tab_med_sd$grupo=="flora",]
 
-# Converte o tipo da coluna "media" e "sd" para numÈrico
+# Converte o tipo da coluna "media" e "sd" para num√©rico
 fauflor$media<- as.numeric(as.character(fauflor$media))
 fauflor$sd<- as.numeric(as.character(fauflor$sd))
 
 # Separa as classes
-fauflor_4 <- fauflor[fauflor$classe =="¡reas Extremamente SensÌveis",]
-fauflor_3 <- fauflor[fauflor$classe =="¡reas Muito SensÌveis",]
-fauflor_2 <- fauflor[fauflor$classe =="¡reas SensÌveis",]
-fauflor_1 <- fauflor[fauflor$classe =="¡reas Menos Preocupantes",]
+fauflor_4 <- fauflor[fauflor$classe =="√Åreas Extremamente Sens√≠veis",]
+fauflor_3 <- fauflor[fauflor$classe =="√Åreas Muito Sens√≠veis",]
+fauflor_2 <- fauflor[fauflor$classe =="√Åreas Sens√≠veis",]
+fauflor_1 <- fauflor[fauflor$classe =="√Åreas Menos Preocupantes",]
 
-# Faz o gr·fico de cada classe
-# EspaÁo entre os gr·ficos de fauna e flora
+# Faz o gr√°fico de cada classe
+# Espa√ßo entre os gr√°ficos de fauna e flora
 pd<- position_dodge(.5) 
 
 # Classe 4
@@ -242,7 +242,7 @@ g4 <- ggplot(fauflor_4, aes(x= categoria, y= media, color = grupo)) +
   theme(strip.text = element_text(colour = "white", face="bold"), strip.background = element_rect(colour = "black", fill = "#a20000"), legend.position="none",axis.title.y=element_text(size=12,face="bold", vjust = -0.5)) + 
   scale_colour_manual(values = c("saddlebrown", "darkgreen"))+
   xlab("") +
-  ylab("Representatividade da DistribuiÁ„o dos Alvos de ConservaÁ„o")+
+  ylab("Representatividade da Distribui√ß√£o dos Alvos de Conserva√ß√£o")+
   facet_grid(. ~ classe)
 
 # Classe 3
@@ -253,7 +253,7 @@ g3 <- ggplot(fauflor_3, aes(x= categoria, y= media, color = grupo)) +
   theme_bw() +
   theme(strip.text = element_text(colour = "black", face="bold"), strip.background = element_rect(colour = "black", fill = "#ff7c10"), legend.position="none",axis.title.x=element_text(size=12,face="bold", hjust = 1.5),plot.title = element_text(hjust = 0.1)) + 
   scale_colour_manual(values = c("saddlebrown", "darkgreen"))+
-  ggtitle("ProporÁ„o da DistribuiÁ„o dos Alvos de ConservaÁ„o na Caatinga")+
+  ggtitle("Propor√ß√£o da Distribui√ß√£o dos Alvos de Conserva√ß√£o na Caatinga")+
   xlab("Categorias da IUCN") +
   ylab("")+
   facet_grid(. ~ classe)
@@ -282,10 +282,10 @@ g1 <- ggplot(fauflor_1, aes(x= categoria, y= media, color = grupo)) +
   ylab("")+
   facet_grid(. ~ classe)
 
-# Montagem dos Gr·ficos em um ˙nico grid ####
+# Montagem dos Gr√°ficos em um √∫nico grid ####
 library(cowplot)
 
-# Plota os gr·ficos em um grid
+# Plota os gr√°ficos em um grid
 prow <- plot_grid( g4 + theme(legend.position="none"),
                    g3 + theme(legend.position="none"),
                    g2 + theme(legend.position="none"),
@@ -294,17 +294,17 @@ prow <- plot_grid( g4 + theme(legend.position="none"),
                    hjust = -1,
                    nrow = 1)
 
-# Captura a legenda de um dos gr·ficos
+# Captura a legenda de um dos gr√°ficos
 legend <- get_legend(g1)
 
-# Abre a Janela onde ser· feito o plot com as dimensıes desejadas
+# Abre a Janela onde ser√° feito o plot com as dimens√µes desejadas
 windows(60,20)
 
-# Plota os gr·ficos junto com a legenda na janela
+# Plota os gr√°ficos junto com a legenda na janela
 plot_grid( prow, legend, rel_widths = c(3, .3))
 
 ########################################################################
-#### ATEN«√O: Salvar o gr·fico pelo menu arquivo da prÛpria  janela ####
+#### ATEN√á√ÉO: Salvar o gr√°fico pelo menu arquivo da pr√≥pria  janela ####
 ########################################################################
 
 ### Cavernas e Fitofisionomias ####
@@ -312,35 +312,35 @@ plot_grid( prow, legend, rel_widths = c(3, .3))
 # Selecionando apenas linhas de fauna e flora
 cavfito <- tab_med_sd[tab_med_sd$grupo =="cavernas" | tab_med_sd$grupo=="fitofisionomias",]
 
-# Converte o tipo da coluna "media" e "sd" para numÈrico
+# Converte o tipo da coluna "media" e "sd" para num√©rico
 cavfito$media<- as.numeric(as.character(cavfito$media))
 cavfito$sd<- as.numeric(as.character(cavfito$sd))
 
-# Define que a ordem (da mais sensivel para a menos preocupante) seja refletida no gr·fico. Caso contr·rio, ser· ordem alfabÈtica.
-cavfito$classe = factor(cavfito$classe, levels=c("¡reas Extremamente SensÌveis",'¡reas Muito SensÌveis','¡reas SensÌveis','¡reas Menos Preocupantes'))
+# Define que a ordem (da mais sensivel para a menos preocupante) seja refletida no gr√°fico. Caso contr√°rio, ser√° ordem alfab√©tica.
+cavfito$classe = factor(cavfito$classe, levels=c("√Åreas Extremamente Sens√≠veis",'√Åreas Muito Sens√≠veis','√Åreas Sens√≠veis','√Åreas Menos Preocupantes'))
 
 # Como posicionar as barras no grafico###
 pd<- position_dodge(.4) 
 
-# Gr·fico para as 4 classes
+# Gr√°fico para as 4 classes
 gcf <- ggplot(cavfito, aes(x= classe, y= media, color = grupo)) +
   geom_point(shape = 16,size  = 2,position = pd) +
   geom_errorbar(aes(ymin  = media - sd, ymax  = media + sd),width = 0.2,size  = 0.7,position = pd) +
   theme_bw() +
-  ggtitle("ProporÁ„o da DistribuiÁ„o dos Alvos de ConservaÁ„o na Caatinga") +
+  ggtitle("Propor√ß√£o da Distribui√ß√£o dos Alvos de Conserva√ß√£o na Caatinga") +
   theme(plot.title = element_text(hjust = 0.5), strip.background = element_rect(colour = "black", fill = "gray")) + 
   scale_colour_manual(values = c("saddlebrown", "darkgreen"))+
-  xlab("Sensibilidade das ¡reas") +
-  ylab("Representatividade da DistribuiÁ„o dos Alvos de ConservaÁ„o")
+  xlab("Sensibilidade das √Åreas") +
+  ylab("Representatividade da Distribui√ß√£o dos Alvos de Conserva√ß√£o")
 
 
-# Abre a Janela onde ser· feito o plot com as dimensıes desejadas
+# Abre a Janela onde ser√° feito o plot com as dimens√µes desejadas
 windows(60,50)
 
-# Plota os gr·ficos junto com a legenda na janela
+# Plota os gr√°ficos junto com a legenda na janela
 gcf
 
 ########################################################################
-#### ATEN«√O: Salvar o gr·fico pelo menu arquivo da prÛpria  janela ####
+#### ATEN√á√ÉO: Salvar o gr√°fico pelo menu arquivo da pr√≥pria  janela ####
 ########################################################################
 

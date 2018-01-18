@@ -1,10 +1,16 @@
 ### Análise de resultados PRIM Estrada valor biologico do zonation raster rank ###
+### Graficos de proporção da distribuição dos alvos por categoria de ameaça nas 4 classes de sensibilidade (flora e fauna)###
+### Importante que todos os arquivos a serem utilizados estejam na mesma pasta. Por exemplo,
+###feature_list tem que estar na pasta que tem o raster do resultado do zonation, que tem as Ups do cerrado e as pastas de 
+###alvos de conservação com todos os respectivos rasters dentro. 
+###O modelo de pasta para este script está em C:/Users/84835001168/Desktop/cerrado_resultado_prim####
+
 ###Dividindo o raster em quatro classes de sensibilidade###
 
 library(raster)
 setwd("D:/PRIM_estrada/_resultado/caatinga")
 
-# Antes de carregar o raster, fazer um cópia dele no ArcGIS para 64bits.
+# Antes de carregar o raster, fazer um cópia dele no ArcGIS para 64bits. mas não é obrigatorio
 # Carregar o raster rank resultado do Zonation
 rank <- raster("rank/prim_estrada_caatinga.tif")
 
@@ -57,6 +63,9 @@ tab_prop <- data.frame("alvo"=character(0),"classe_1"=numeric(0),"classe_2"=nume
 
 #para construir o looping, preciso extrair o raster de cada alvo e para isso busco a lista na tabela com o endereço dos alvos. a partir daí os comandos pedem para eliminar tudo que 
 ##nao seja o nome da sp##
+
+##Se o loop não funcionar, da para descobrir o erro individualmente por especie, começando em a<-spp[1], pula a linha seguinte (q começa com for...)
+### e segue direto para o nome no alvo ( nome <- basename(a)). O [1] se refere à linha na planilha do alvo. Se o alvo está na linha 203, [203]###
 #a <- spp[1]
 
 for (a in spp){

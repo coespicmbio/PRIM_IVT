@@ -32,7 +32,7 @@ plot(c4)
 rc <- c1+c2+c3+c4
 plot(c1+c2+c3+c4)
 
-# Carrega o raster ou shapefile de ups (converte para raster)
+# Carrega o raster ou shapefile de ups (converte para raster). tem que ser o raster q foi usado no zonation. atencao as letras maiusculas e underlines
 up <- raster("./up/up_caatinga.tif")
 plot(up)
 

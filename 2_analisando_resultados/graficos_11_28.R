@@ -46,16 +46,21 @@ c3_prop <- round(cellStats(c3, stat='sum', na.rm=TRUE)/ncell_bioma,2)
 c4_prop <- round(cellStats(c4, stat='sum', na.rm=TRUE)/ncell_bioma,2)
 
 # Carrega o arquivo spp dos alvos de conservacao###
+###spp é o caminho do endereço dos raters dos alvos, a partir de alvos de conservação
 spp <- read.table("features_list.txt",header = F,sep=" ")
 
 ##escolhe a coluna que interessa da planilha#
 spp <- spp[,6]
+#transforma a tabela em vetor, deixa de ter coluna e linha#
 spp <- as.vector(spp)
-#muda os nomes dos elementos da primeira coluna (era o endereço da pasta e eu quero so o nome do alvo)
+#exclui todos os caracteres antes de "alvos_conservacao", ou seja, deixa no vetor apenas o caminho que me interessa para encontrar o raster
 spp <- gsub(spp,pattern = ".*alvos_conservacao/", replacement = "")
+##Caso na spp list (que foi obtida a partir do features-list) tiver as linhas de ameças, podemos elimina-las antes do rodar o loop. 
+###mas mesmo que a gente não delete, o loop vai dar erro nessa parte, mas as tabelas serão criadas apesar do erro
 
 
 ##criando tabelas a serem preenchidas no loop abaixo###
+##toda vez que vc rodar o loop e por acaso tiver que refaze-lo, os dados vem para a tabela, entao, SEMPRE CRIE as tabelas vazias (rode os comandos abaixo) antes de rodar o loop para evitar sobreposição de informação
 tab_up <- data.frame("alvo"=character(0),"up"=numeric(0))
 tab_cl <- data.frame("alvo"=character(0),"classe"=numeric(0))
 tab_prop <- data.frame("alvo"=character(0),"classe_1"=numeric(0),"classe_2"=numeric(0),"classe_3"=numeric(0),"classe_4"=numeric(0))
@@ -119,6 +124,9 @@ for (a in spp){
 
 
 # Carrega a tabela com as categorias de ameaças
+##Essa planilha eu fiz com base no arquivo "planilha_prim_estradas_ferrovias_MP1" que é um arquivo com varias abas. Peguei todas as sp
+###de fauna ameaçadas e de flora e salvei. Na aba das sp de flora, não tem coluna de categoria, e sim de status (com os pesos relativos aos
+### categorias de ameaça. Substituí peso 1 por Cr, 0.75 por En e 0.5 por VU###
 cat <- read.table("especies_categoria.txt",sep="\t",header = T)
 
 # merge
@@ -132,9 +140,9 @@ write.table(tab_up,"tabela_ups.txt",sep="\t",quote = F,row.names = F)
 write.table(tab_prop,"tabela_proporcao_distribuicao.txt",sep="\t",quote = F,row.names = F)
 
 
-###### ATENÇÃO ##################################################################################################################
-# Abrir a planilha "tabela_proporcao_distribuicao.txt" no excel e completar a coluna "grupos" com "fitofisionomias" e "cavernas"
-#################################################################################################################################
+###### ATENÇÃO ########################################################################################################################################################################################################################################################################
+# # Abrir a planilha "tabela_proporcao_distribuicao.txt" no excel e inserir uma coluna "grupos" com "fauna", "flora", "fitofisionomias" e "cavernas". 
+######################################################################################################################################################################################################################################################################################
 
 # Carregar a planilha "tabela_proporcao_distribuicao.txt"
 tab_prop <- read.table("tabela_proporcao_distribuicao.txt",sep="\t", header=T)
@@ -209,7 +217,7 @@ tab_med_sd$classe = factor(tab_med_sd$classe, levels=c("Áreas Extremamente Sens
 tab_med_sd$categoria = factor(tab_med_sd$categoria, levels=c("CR",'EN','VU',"NT","LC"))
 
 # Salva a tabela
-write.table(tab_med_sd,"tabela_proporcao_distribuicao_MEAN.txt",sep="/t",quote = F,row.names = F)
+write.table(tab_med_sd,"tabela_proporcao_distribuicao_MEAN.txt",sep="\t",quote = F,row.names = F)
 #####
 
 

@@ -220,6 +220,8 @@ tab_med_sd$categoria = factor(tab_med_sd$categoria, levels=c("CR",'EN','VU',"NT"
 write.table(tab_med_sd,"tabela_proporcao_distribuicao_MEAN.txt",sep="\t",quote = F,row.names = F)
 #####
 
+# Intervalo de confiança 95%
+tab_med_sd$IC95 <- as.numeric(as.vector(tab_med_sd$sd))* 1.96
 
 #### GRÁFICOS ####
 library(ggplot2)
@@ -239,6 +241,7 @@ fauflor <- tab_med_sd[tab_med_sd$grupo =="fauna" | tab_med_sd$grupo=="flora",]
 # Converte o tipo da coluna "media" e "sd" para numérico
 fauflor$media<- as.numeric(as.character(fauflor$media))
 fauflor$sd<- as.numeric(as.character(fauflor$sd))
+fauflor$IC95 <- as.numeric(as.character(fauflor$IC95))
 
 # Separa as classes
 fauflor_4 <- fauflor[fauflor$classe =="Áreas Extremamente Sensíveis",]
@@ -253,8 +256,11 @@ pd<- position_dodge(.5)
 # Classe 4
 g4 <- ggplot(fauflor_4, aes(x= categoria, y= media, color = grupo)) +
   geom_point(shape = 16,size  = 2,position = pd) +
-  geom_errorbar(aes(ymin  = media - sd, ymax  = media + sd),width = 0.2,size  = 0.7,position = pd) +
-  scale_y_continuous(limits = c(-0.1, 1.1), breaks = c(0,0.2,0.4,0.6,0.8,1))+
+  geom_errorbar(aes(ymin  = media - IC95, ymax  = media + IC95),width = 0.2,size  = 0.7,position = pd) +
+  scale_y_continuous(limits = c(-0.3, 1.3), breaks = c(-0.2,0,0.2,0.4,0.6,0.8,1,1.2))+
+  # Para desvio padrão como barra substituir as duas linhas acima pelas duas linhas abaixo
+  #geom_errorbar(aes(ymin  = media - sd, ymax  = media + sd),width = 0.2,size  = 0.7,position = pd) +
+  #scale_y_continuous(limits = c(-0.1, 1.1), breaks = c(0,0.2,0.4,0.6,0.8,1))+
   theme_bw() +
   theme(strip.text = element_text(colour = "white", face="bold"), strip.background = element_rect(colour = "black", fill = "#a20000"), legend.position="none",axis.title.y=element_text(size=12,face="bold", vjust = -0.5)) + 
   scale_colour_manual(values = c("saddlebrown", "darkgreen"))+
@@ -265,8 +271,11 @@ g4 <- ggplot(fauflor_4, aes(x= categoria, y= media, color = grupo)) +
 # Classe 3
 g3 <- ggplot(fauflor_3, aes(x= categoria, y= media, color = grupo)) +
   geom_point(shape = 16,size  = 2,position = pd) +
-  geom_errorbar(aes(ymin  = media - sd, ymax  = media + sd),width = 0.2,size  = 0.7,position = pd) +
-  scale_y_continuous(limits = c(-0.1, 1.1), breaks = c(0,0.2,0.4,0.6,0.8,1),labels = NULL)+
+  geom_errorbar(aes(ymin  = media - IC95, ymax  = media + IC95),width = 0.2,size  = 0.7,position = pd) +
+  scale_y_continuous(limits = c(-0.3, 1.3), breaks = c(-0.2,0,0.2,0.4,0.6,0.8,1,1.2))+
+  # Para desvio padrão como barra substituir as duas linhas acima pelas duas linhas abaixo
+  #geom_errorbar(aes(ymin  = media - sd, ymax  = media + sd),width = 0.2,size  = 0.7,position = pd) +
+  #scale_y_continuous(limits = c(-0.1, 1.1), breaks = c(0,0.2,0.4,0.6,0.8,1))+
   theme_bw() +
   theme(strip.text = element_text(colour = "black", face="bold"), strip.background = element_rect(colour = "black", fill = "#ff7c10"), legend.position="none",axis.title.x=element_text(size=12,face="bold", hjust = 1.5),plot.title = element_text(hjust = 0.1)) + 
   scale_colour_manual(values = c("saddlebrown", "darkgreen"))+
@@ -278,8 +287,11 @@ g3 <- ggplot(fauflor_3, aes(x= categoria, y= media, color = grupo)) +
 # Classe 2
 g2 <- ggplot(fauflor_2, aes(x= categoria, y= media, color = grupo)) +
   geom_point(shape = 16,size  = 2,position = pd) +
-  geom_errorbar(aes(ymin  = media - sd, ymax  = media + sd),width = 0.2,size  = 0.7,position = pd) +
-  scale_y_continuous(limits = c(-0.1, 1.1), breaks = c(0,0.2,0.4,0.6,0.8,1),labels = NULL)+
+  geom_errorbar(aes(ymin  = media - IC95, ymax  = media + IC95),width = 0.2,size  = 0.7,position = pd) +
+  scale_y_continuous(limits = c(-0.3, 1.3), breaks = c(-0.2,0,0.2,0.4,0.6,0.8,1,1.2))+
+  # Para desvio padrão como barra substituir as duas linhas acima pelas duas linhas abaixo
+  #geom_errorbar(aes(ymin  = media - sd, ymax  = media + sd),width = 0.2,size  = 0.7,position = pd) +
+  #scale_y_continuous(limits = c(-0.1, 1.1), breaks = c(0,0.2,0.4,0.6,0.8,1))+
   theme_bw() +
   theme(strip.text = element_text(colour = "black", face="bold"), strip.background = element_rect(colour = "black", fill = "#ffe200"), legend.position="none",plot.background = element_rect(fill = "transparent")) + 
   scale_colour_manual(values = c("saddlebrown", "darkgreen"))+
@@ -290,8 +302,11 @@ g2 <- ggplot(fauflor_2, aes(x= categoria, y= media, color = grupo)) +
 # Classe 1
 g1 <- ggplot(fauflor_1, aes(x= categoria, y= media, color = grupo)) +
   geom_point(shape = 16,size  = 2,position = pd) +
-  geom_errorbar(aes(ymin  = media - sd, ymax  = media + sd),width = 0.2,size  = 0.7,position = pd) +
-  scale_y_continuous(limits = c(-0.1, 1.1), breaks = c(0,0.2,0.4,0.6,0.8,1), labels = NULL)+
+  geom_errorbar(aes(ymin  = media - IC95, ymax  = media + IC95),width = 0.2,size  = 0.7,position = pd) +
+  scale_y_continuous(limits = c(-0.3, 1.3), breaks = c(-0.2,0,0.2,0.4,0.6,0.8,1,1.2))+
+  # Para desvio padrão como barra substituir as duas linhas acima pelas duas linhas abaixo
+  #geom_errorbar(aes(ymin  = media - sd, ymax  = media + sd),width = 0.2,size  = 0.7,position = pd) +
+  #scale_y_continuous(limits = c(-0.1, 1.1), breaks = c(0,0.2,0.4,0.6,0.8,1))+
   theme_bw() +
   theme(strip.text = element_text(colour = "white", face="bold"), strip.background = element_rect(colour = "black", fill = "#2a9600"),plot.background = element_rect(fill = "transparent")) + 
   scale_colour_manual(values = c("saddlebrown", "darkgreen"))+
@@ -360,4 +375,3 @@ gcf
 ########################################################################
 #### ATENÇÃO: Salvar o gráfico pelo menu arquivo da própria  janela ####
 ########################################################################
-
